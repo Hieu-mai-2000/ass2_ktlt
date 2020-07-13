@@ -124,7 +124,7 @@ int hinh_phat(int &HP,int sukien,int baseDamage){
 void gap_Nina(int &gil,int &tinh_trang,int &HP,int maxHP,int expecial){
   if(expecial){
     if(tinh_trang == trung_doc ) tinh_trang = giai_doc;
-    HP = maxHP;//cai nay la doan..nen len eler xem phai khong
+    HP = maxHP;
   }
   else if(gil>=50) {
     if(tinh_trang == trung_doc){
@@ -621,42 +621,43 @@ if(mode == 0 || mode ==1 ){
       else if(theEvent == 3) {baseDamge=4.5;base_gil=450;}
       else if(theEvent==4) {baseDamge=6.5;base_gil=650;}
       else if(theEvent==5) {baseDamge=8.5;base_gil=850;}
-      if(test.kiem_Lionheart==1 || test.hiep_si == hiep_si_Arthur || test.hiep_si == hiep_si_Lancelot || test.hiep_si == hiep_si_Paladin || (test.number_Odin_giup_do !=-1))
-        {theKnight.gil = (theKnight.gil+base_gil >999)?999:(theKnight.gil+base_gil);test.numberWin++;}
-      else if(test.tinh_trang == trung_doc){
-            if(chien_dau(theKnight.level,j+1)) 
-             {
-               theKnight.gil = (theKnight.gil+base_gil >999)?999:(theKnight.gil+base_gil);
-               test.numberWin++;
-             }
-            else 
-            {//thua thi bi trua mau 1 lan
-              test.numberClose++;
-              if(test.ao_giap_mythril == 0) 
-               if(hinh_phat(theKnight.HP,j+1,baseDamge) ==0)
-                { 
-                  callPhoenix(theKnight,test.maxHP);
-                  if(test.tinh_trang == trung_doc ) test.tinh_trang =giai_doc;
-                }
-              }
-           // if(test.ao_giap_mythril ||(theEvent==2 && test.hiep_si == cong_chua_Guinevere)) continue;
-            //hinh phat khi trung doc la tru mau them 1 lan nua
-            if(hinh_phat(theKnight.HP,j+1,baseDamge) ==0)
+      if(test.kiem_Lionheart==1 || test.hiep_si == hiep_si_Arthur || test.hiep_si == hiep_si_Lancelot 
+      || test.hiep_si == hiep_si_Paladin || (test.number_Odin_giup_do !=-1) || chien_dau(theKnight.level,j+1) )
+        {
+        theKnight.gil = (theKnight.gil+base_gil >999)?999:(theKnight.gil+base_gil);
+        test.numberWin++;
+        if(test.tinh_trang == trung_doc)
+        if(hinh_phat(theKnight.HP,j+1,baseDamge) ==0)
               { 
                 callPhoenix(theKnight,test.maxHP);
                 if(test.tinh_trang == trung_doc ) test.tinh_trang =giai_doc;
               }
-
-            }
-      else if(chien_dau(theKnight.level,j+1))
-            {theKnight.gil = (theKnight.gil+base_gil >999)?999:(theKnight.gil+base_gil);test.numberWin++;}
+        }
       else {
             test.numberClose++;
-            if(test.ao_giap_mythril ||(theEvent==2 && test.hiep_si == cong_chua_Guinevere)) continue;
-            if(hinh_phat(theKnight.HP,j+1,baseDamge) ==0)
+            if(test.ao_giap_mythril ==1 ||(theEvent==2 && test.hiep_si == cong_chua_Guinevere)) 
+            {
+              if(test.tinh_trang == trung_doc)
+              if(hinh_phat(theKnight.HP,j+1,baseDamge) ==0)
+              { 
+                callPhoenix(theKnight,test.maxHP);
+                if(test.tinh_trang == trung_doc ) test.tinh_trang =giai_doc;
+              }
+              continue;
+            }
+            if(test.tinh_trang == trung_doc){
+              if(hinh_phat(theKnight.HP,j+1,2*baseDamge) ==0)
             {
                 callPhoenix(theKnight,test.maxHP);
                 if(test.tinh_trang == trung_doc ) test.tinh_trang =giai_doc;
+            }
+            }
+            else{
+              if(hinh_phat(theKnight.HP,j+1,baseDamge) ==0)
+            {
+                callPhoenix(theKnight,test.maxHP);
+                if(test.tinh_trang == trung_doc ) test.tinh_trang =giai_doc;
+            }
             }
           }
         continue;
@@ -678,18 +679,14 @@ else {
      {increa_level(theKnight.level,test.maxHP);test.numberWin++;}
  else{
     test.numberClose++;
-    if(test.hiep_si == hiep_si_Paladin || test.hiep_si == hiep_si_rong) 
-     {
-       if(theKnight.antidote != 0) theKnight.antidote--;
-       break;
-     }
+    if(test.hiep_si == hiep_si_Paladin || test.hiep_si == hiep_si_rong) break;
     test.number_thu_thach=0;
     hinh_phat_Tornbery(test.tinh_trang,theKnight.antidote,3,test.number_thu_thach);
  }
 }
 break;
 case Queen_of_Cards:
-if(chien_dau(theKnight.level,j+1) || test.hiep_si == hiep_si_Paladin || test.hiep_si == hiep_si_rong ||test.number_Odin_giup_do !=-1 || test.hiep_si == hiep_si_Arthur|| test.hiep_si == hiep_si_Lancelot)
+if(chien_dau(theKnight.level,j+1) ||test.number_Odin_giup_do !=-1 || test.hiep_si == hiep_si_Arthur|| test.hiep_si == hiep_si_Lancelot || test.kiem_Lionheart==1)
    {theKnight.gil = (theKnight.gil*2 >999)?999:theKnight.gil*2;test.numberWin++;}
 else {
   test.numberClose++;
@@ -703,14 +700,11 @@ if(test.hiep_si == cong_chua_Guinevere || test.ao_SH ==1 || friendly_number(theK
     gap_Nina(theKnight.gil,test.tinh_trang,theKnight.HP,test.maxHP,1);
     if(test.hiep_si == cong_chua_Guinevere) theKnight.gil = (theKnight.gil+50 >999)?999:theKnight.gil+50;
   }
-else 
-  gap_Nina(theKnight.gil,test.tinh_trang,theKnight.HP,test.maxHP,0);
+else  gap_Nina(theKnight.gil,test.tinh_trang,theKnight.HP,test.maxHP,0);
 if(friendly_number(theKnight.HP,theKnight.gil)) 
 {
- test.number_Lionheart=0;
- //kiem_tra_kiem_Lionheart(&kiem_Lionheart,&number_Lionheart); 
+ test.number_Lionheart=0; // o phia tren da co kiem tra roi xem lai o dong thu 608-609
 }
- 
 break;
 case vuong_sau_rieng:
 vuon_sau_rieng(test.tinh_trang,theKnight.HP,test.maxHP,test.hoa_hong,test.ao_SH);
@@ -722,7 +716,6 @@ case gap_Odin:
 if(test.than_Odin == da_chet) break;
 else {
 test.number_Odin_giup_do=0;
-//Odin(tinh_trang,&number_Odin_giup_do);
 }
 break;
 case gap_phu_thuy_Merlin:
@@ -748,9 +741,9 @@ if((theKnight.level==10 && test.Excalibur ==1)|| (test.hiep_si == hiep_si_rong &
 
 break;
 case than_chet_Hades:
-if(test.number_Odin_giup_do!= -1) if(test.hiep_si == hiep_si_rong) {test.ao_giap_mythril=1;break;}
+if(test.number_Odin_giup_do!= -1) if(test.hiep_si == hiep_si_rong) {test.ao_giap_mythril=1;test.numberWin++;break;}
                              else test.than_Odin = da_chet;
-if(chien_dau(theKnight.level,j+1) || test.kiem_Lionheart || tinh_yeu_vinh_cuu(test.giao_Lancelot,test.toc_Guinevere,test.Excalibur,test.hiep_si) || (test.number_Odin_giup_do !=-1 && test.hiep_si == hiep_si_rong))
+if(chien_dau(theKnight.level,j+1) || test.kiem_Lionheart==1 || tinh_yeu_vinh_cuu(test.giao_Lancelot,test.toc_Guinevere,test.Excalibur,test.hiep_si) )
    {test.ao_giap_mythril =1;test.numberWin++;}
 else{
   test.numberClose++;
@@ -782,22 +775,20 @@ else
   test.toc_Guinevere =1;
 break;
 case guom_Excalibur:
-//them cai phan arthirl co the rut kiem ma khong can du ba bao vat
-if(test.hiep_si == hiep_si_Arthur) {test.Excalibur=1;break;}
-if(test.khien_Paladin && test.giao_Lancelot && test.toc_Guinevere)
+if(  (test.khien_Paladin && test.giao_Lancelot && test.toc_Guinevere) || test.hiep_si == hiep_si_Arthur)
 test.Excalibur=1;
 break;
 case gap_Ultimecia:
 if(test.tinh_trang == trung_doc) theKnight.HP = (theKnight.HP < 3)?1:(int)theKnight.HP/3;
-if(test.Excalibur || test.kiem_Lionheart)
+if(test.Excalibur ==1 || test.kiem_Lionheart ==1)
 {
   test.numberWin++;
   goto ket_thuc;
 }
 else {
   test.numberClose++;
-  if(test.hiep_si == cong_chua_Guinevere) break;//phai tach rieng do cong chua van tinh la thua
-  if(test.ao_giap_mythril != 1) theKnight.HP = (theKnight.HP < 3)?1:(int)theKnight.HP/3;
+  if(test.hiep_si == cong_chua_Guinevere || test.ao_giap_mythril ==1  ) break;//phai tach rieng do cong chua van tinh la thua
+  theKnight.HP = (theKnight.HP < 3)?1:(int)theKnight.HP/3;
   }
 
 break;
